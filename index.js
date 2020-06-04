@@ -3,6 +3,8 @@ const express = require('express');
 const expressLayouts = require('express-ejs-layouts');
 const app = express();
 const axios = require('axios');
+const cheerio = require('cheerio');
+const request = require('request-promise');
 
 const sassMiddleware = require('node-sass-middleware');
 
@@ -31,25 +33,3 @@ app.listen(port, (err)=>{
 
     console.log(`app up and running on port ${port}`);
 })
-
-
-
-//tags related to the search
-// $('.tags')
-
-//author name
-//$('.postMetaInline>a').text for author name
-
-//title-link
-// $('.postArticle-content').parentElement.href
-
-//title-text
-// $('.graf--h3').textContent
-
-//details-reading-time
-//$('.readingTime').title
-
-//details time
-// $('time').textContent
-
-//$('h3').text for title article

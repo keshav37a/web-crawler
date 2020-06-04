@@ -6,7 +6,7 @@ let searchTags = ()=>{
     //For getting the list of search results and their links
     $.ajax({
         type: "GET",
-        url: `/list/:${searchTag}`,
+        url: `/list/${searchTag}`,
         success: function (response) {
             console.log(response);
         }
