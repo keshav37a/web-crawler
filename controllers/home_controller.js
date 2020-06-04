@@ -1,6 +1,5 @@
 const axios = require('axios');
 const cheerio = require('cheerio');
-const request = require('request-promise');
 
 module.exports.home = (req, res) => {
     return res.render('home.ejs');
@@ -24,24 +23,28 @@ module.exports.getSearchResults = async (req, res) => {
         let tagsList = [];
         $('.tags--postTags').children().each((index, element)=>{
             let childText = $(element).text();
-            tagsList.push(childText);
+            let childLink = $(element).children().attr('href');
+            let obj = {};
+            obj['name'] = childText;
+            obj['value'] = childLink;
+            tagsList.push(obj);
         })
-        console.log(tagsList);
     
         let articleLinkslist = [];
         $('body').find('.postArticle-content').each(function (index, element) {
             articleLinkslist.push($(element).parent().attr('href').toString());
         });
-        console.log(articleLinkslist);
         let data = {tags: tagsList, links: articleLinkslist};
     
         return res.status(200).json({
             data: data,
-            message: 'getSearchResults in Home Controller called'
+            message: 'Success'
         });
     }
     catch (err) {
         console.log(err);
+        return res.status(500).json({
+            message: 'Internal Server Error'
+        });
     }
-
 }

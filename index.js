@@ -4,7 +4,6 @@ const expressLayouts = require('express-ejs-layouts');
 const app = express();
 const axios = require('axios');
 const cheerio = require('cheerio');
-const request = require('request-promise');
 
 const sassMiddleware = require('node-sass-middleware');
 
