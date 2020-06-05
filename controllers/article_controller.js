@@ -3,7 +3,8 @@ const cheerio = require('cheerio');
 
 module.exports.home = async (req, res) => {
     let url = req.body.link;
-    // console.log(url);
+    
+    let sTime = startTime();
 
     let articleHTML = await loadHtml(url);
     let $ = cheerio.load(articleHTML);
@@ -27,12 +28,6 @@ module.exports.home = async (req, res) => {
     let articlePublishedTime = $('meta[property="article:published_time"]').attr('content');
 
     let articleDescription = $('meta[name="description"]').attr('content');
-    
-    let returnedData = {};
-    returnedData['title'] = articleTitle;
-    returnedData['author'] = articleAuthor;
-    returnedData['publishedTime'] = articlePublishedTime;
-    returnedData['description'] = articleDescription;
 
     //to get response url;
     let allUrls = [];
@@ -43,9 +38,9 @@ module.exports.home = async (req, res) => {
     let responseLink = "";
     let responsePartialUrl = 'https://medium.com/p/';
 
-    for(let i=0; i<allUrls.length; i++){
+    for (let i = 0; i < allUrls.length; i++) {
         let url = allUrls[i];
-        if(url.includes(responsePartialUrl)){
+        if (url.includes(responsePartialUrl)) {
             responseLink = url
         }
     }
@@ -54,10 +49,19 @@ module.exports.home = async (req, res) => {
     let responseHTML = await loadHtml(responseLink);
     // $ = cheerio.load(responseHTML);
     // let pTags = $('.streamItem.streamItem--postPreview.js-streamItem').each((index, element)=>{
-        
+
     // })
     // console.log('pTags: ', pTags);
     // console.log(`site-main: ${pTags}`);
+
+    let timeDiff = endTime(sTime);
+
+    let returnedData = {};
+    returnedData['title'] = articleTitle;
+    returnedData['author'] = articleAuthor;
+    returnedData['publishedTime'] = articlePublishedTime;
+    returnedData['description'] = articleDescription;
+    returnedData['timeElapsed'] = timeDiff;
 
     return res.status(200).json({
         data: returnedData,
@@ -65,7 +69,7 @@ module.exports.home = async (req, res) => {
     });
 }
 
-let loadHtml = async (url)=>{
+let loadHtml = async (url) => {
     let response = await axios.get(url, {
         headers: {
             'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
@@ -78,4 +82,20 @@ let loadHtml = async (url)=>{
     // console.log('-----------------------------------------------------------------------');
     // console.log(`htmlResponse: ${htmlResponse}`);
     return htmlResponse;
+}
+
+let startTime = ()=> {
+    return new Date();
+};
+
+let endTime = (startTime)=> {
+    let newTime = new Date();
+    let timeDiff = newTime - startTime; //in ms
+    // strip the ms
+    timeDiff /= 1000;
+
+    // get seconds 
+    let seconds = Math.round(timeDiff);
+    console.log(seconds + " seconds");
+    return seconds;
 }

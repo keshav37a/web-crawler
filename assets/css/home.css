@@ -11,15 +11,16 @@
     #home-container .input-container .input-el {
       margin: 1rem;
       padding: 0.25rem 0.5rem 0.25rem 0.5rem; }
-  #home-container #searh-results-container #tag-link-container {
+  #home-container #search-results-container .heading {
+    margin: 1rem 1rem 1rem 1rem; }
+  #home-container #search-results-container .tag-link-text {
+    text-decoration: none; }
+  #home-container #search-results-container #tag-link-container {
     margin: auto; }
-    #home-container #searh-results-container #tag-link-container .tag-link-item {
+    #home-container #search-results-container #tag-link-container .tag-link-item {
       padding: 0.5rem;
-      border: 1px solid black;
       margin: 1rem; }
-      #home-container #searh-results-container #tag-link-container .tag-link-item .tag-link-text {
-        text-decoration: none; }
-  #home-container #searh-results-container #article-list-container .single-article-container {
+  #home-container #search-results-container #article-list-container .single-article-container {
     margin: 1rem;
     border: 1px solid black;
     padding: 1rem;

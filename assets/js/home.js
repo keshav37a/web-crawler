@@ -13,22 +13,42 @@ let searchTags = () => {
             let links = response.data.links;
             let relatedTags = response.data.tags;
 
-            let tagLinkContainer = $('#tag-link-container');
-            tagLinkContainer.empty();
+            $('#tag-link-container').remove();
+            $('#article-list-container').remove();
+
+            addHeadingTags();
             for (let tag of relatedTags) {
-                let tagString = createTagDom(tag);
-                tagLinkContainer.append(tagString);
+                createTagDom(tag);
             }
+            addHeadingArticles();
             scrappingTopArticlesLink(links);
         }
     });
 }
 
+let addHeadingTags = () => {
+    let str = `
+    <div id="tag-link-container" class="flex-row-start">
+        <h3 class="heading">Related Tags</h3>
+    </div >`;
+    $('#search-results-container').append(str);
+}
+
+let addHeadingArticles = ()=>{
+    let str = `
+    <div id="article-list-container" class="flex-col-start">
+        <h3 class="heading">Articles</h3>
+    </div>`;
+    $('#search-results-container').append(str);
+}
+
+
 let createTagDom = (tag) => {
-    return str =
+    let str =
         `<div class="tag-link-item">
         <a class="tag-link-text" href="${tag.value}">${tag.name}</a>
     </div>`;
+    $('#tag-link-container').append(str);
 };
 
 let createCrawlingPendingDom = (crawlingOrPending, i) => {
@@ -39,21 +59,25 @@ let createCrawlingPendingDom = (crawlingOrPending, i) => {
     $('#article-list-container').append(str);
 }
 
-let createArticleDetailsDom = (data, i)=>{
+let createArticleDetailsDom = (data, i) => {
     $(`#article-${i}`).text('');
-    let str = 
+    let str =
         `<div class="article-title-link">
-            <a href="${data.title.link}">${data.title.name}</a>
+            <a class="tag-link-text" href="${data.title.link}">${data.title.name}</a>
         </div>
         <div class="article-author">
-            <a href="${data.author.link}">${data.author.name}</a>
+            <a class="tag-link-text" href="${data.author.link}">${data.author.name}</a>
         </div>
         <div class="article-published-at">
             <p>${data.publishedTime}</p>
         </div>
         <div class="article-description">
             <p>${data.description}</p>
+        </div>
+        <div class="time-elapsed">
+            <p>Time Elapsed: ${data.timeElapsed} Seconds</p>
         </div>`;
+
 
     $(`#article-${i}`).append(str);
 }
@@ -69,7 +93,7 @@ let scrappingTopArticlesLink = (links) => {
         $.ajax({
             type: "POST",
             url: `/article`,
-            data: {link: links[i]},
+            data: { link: links[i] },
             success: function (response) {
                 console.log(response);
                 response.data.publishedTime = dateFormatFn(response.data.publishedTime);
@@ -79,7 +103,7 @@ let scrappingTopArticlesLink = (links) => {
     }
 }
 
-let dateFormatFn = function(dateString){
+let dateFormatFn = function (dateString) {
     console.log('DateFormat fn called');
     let formattedDate = moment(dateString).format('MMMM DD, hh:mm A');
     return formattedDate;

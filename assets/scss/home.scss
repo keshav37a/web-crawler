@@ -18,18 +18,22 @@
         }
     }
 
-    #searh-results-container{
+    #search-results-container{
+        .heading{
+            margin: 1rem 1rem 1rem 1rem;
+        }
+
+        .tag-link-text{
+            text-decoration: none;
+        }
+
         #tag-link-container{
             margin: auto;
 
             .tag-link-item{
                 padding: 0.5rem;
-                border: 1px solid black;
                 margin: 1rem;
             
-                .tag-link-text{
-                    text-decoration: none;
-                }
             }
 
         }
