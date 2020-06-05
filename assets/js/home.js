@@ -43,8 +43,18 @@ let createArticleDetailsDom = (data, i)=>{
     $(`#article-${i}`).text('');
     let str = 
         `<div class="article-title-link">
-            <a href="${data.title.link}">${data.title.title}</a>
-        </div>`
+            <a href="${data.title.link}">${data.title.name}</a>
+        </div>
+        <div class="article-author">
+            <a href="${data.author.link}">${data.author.name}</a>
+        </div>
+        <div class="article-published-at">
+            <p>${data.publishedTime}</p>
+        </div>
+        <div class="article-description">
+            <p>${data.description}</p>
+        </div>`;
+
     $(`#article-${i}`).append(str);
 }
 
@@ -62,8 +72,15 @@ let scrappingTopArticlesLink = (links) => {
             data: {link: links[i]},
             success: function (response) {
                 console.log(response);
+                response.data.publishedTime = dateFormatFn(response.data.publishedTime);
                 createArticleDetailsDom(response.data, i);
             }
         });
     }
+}
+
+let dateFormatFn = function(dateString){
+    console.log('DateFormat fn called');
+    let formattedDate = moment(dateString).format('MMMM DD, hh:mm A');
+    return formattedDate;
 }

@@ -1,5 +1,4 @@
 #home-container{
-    margin: 0rem 1rem 0rem 1rem;
     background-color: lightblue;
     font-family: sans-serif;
 
@@ -37,6 +36,9 @@
         #article-list-container{
             .single-article-container{
                 margin: 1rem;
+                border: 1px solid black;
+                padding: 1rem;
+                width: 90%;
             }
         }
     }
