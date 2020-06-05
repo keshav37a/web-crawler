@@ -1,5 +1,7 @@
 const axios = require('axios');
 const cheerio = require('cheerio');
+const db = require('../config/mysql');
+const mysql = require('mysql');
 
 module.exports.home = (req, res) => {
     return res.render('home.ejs');

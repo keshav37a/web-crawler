@@ -4,6 +4,7 @@ const expressLayouts = require('express-ejs-layouts');
 const app = express();
 const axios = require('axios');
 const cheerio = require('cheerio');
+const db = require('./config/mysql');
 
 const sassMiddleware = require('node-sass-middleware');
 
@@ -31,4 +32,4 @@ app.listen(port, (err)=>{
     if(err){console.log(`error: ${err}`); }
 
     console.log(`app up and running on port ${port}`);
-})
+}); 
