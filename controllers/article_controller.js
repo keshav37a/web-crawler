@@ -16,11 +16,20 @@ module.exports.home = async (req, res) => {
     let htmlResponse = response.data;
     const $ = cheerio.load(htmlResponse);
 
-    let heading = $("h1").first().text();
-    console.log(`heading: `, heading);
+    let article = {};
+    let title = $("h1").first().text();
+    console.log(`title: `, title);
+    article['title'] = title;
+    article['link'] = url;
+
+    let articleObj = $('article').html();
+    console.log('article: ', articleObj);
+
+    let returnedData = {};
+    returnedData['title'] = article;
 
     return res.status(200).json({
-        data: {heading},
+        data: returnedData,
         message: 'Home in Article Controller called'
     });
 }

@@ -39,12 +39,22 @@ let createCrawlingPendingDom = (crawlingOrPending, i) => {
     $('#article-list-container').append(str);
 }
 
+let createArticleDetailsDom = (data, i)=>{
+    $(`#article-${i}`).text('');
+    let str = 
+        `<div class="article-title-link">
+            <a href="${data.title.link}">${data.title.title}</a>
+        </div>`
+    $(`#article-${i}`).append(str);
+}
+
 let scrappingTopArticlesLink = (links) => {
     for (let i = 0; i < links.length; i++) {
         createCrawlingPendingDom('pending', i);
     }
     for (let i = 0; i < links.length; i++) {
         $(`#article-${i}`).text('crawling');
+
         //For getting the article details
         $.ajax({
             type: "POST",
@@ -52,6 +62,7 @@ let scrappingTopArticlesLink = (links) => {
             data: {link: links[i]},
             success: function (response) {
                 console.log(response);
+                createArticleDetailsDom(response.data, i);
             }
         });
     }
