@@ -77,4 +77,15 @@ class DomCreation{
         </div > `;
         $('#search-history-container').append(str);
     }   
+
+    addFilterDom = (tags)=>{
+        let strBeg = `<select class="input-el btn" id="filter-tags" onchange=filterFunction()>`;
+        let none = '<option value="none">No Filter</option>';
+        for(let i=0; i<tags.length; i++){
+            let option = `<option value="${tags[i]}">${tags[i]}</option>`;
+            strBeg+=option;
+        }
+        let strEnd = `</select>`;
+        $('#input-container').append(strBeg+none+strEnd);
+    }
 }

@@ -1,5 +1,6 @@
 console.log('Home script called');
 let currentData = [];
+let allData = [];
 let isAscending = true;
 let isSortPresent = false;
 
@@ -79,11 +80,18 @@ let showHistory = () => {
                 // createHistoryHeaderDom();
                 let historyArr = response.data;
                 currentData = response.data;
+                allData = response.data;
+                let tags = [];
                 for (let i = 0; i < historyArr.length; i++) {
                     let historyItem = historyArr[i];
+                    let singleTag = historyItem['tag_history.tag_name'].toLowerCase();
                     historyItem.updatedAt = dateFormatFn(historyItem.updatedAt);
                     domCreation.createHistoryitemDom(historyItem, i);
+                    if($.inArray( singleTag, tags)==-1)
+                        tags.push(singleTag);
                 }
+                console.log(tags);
+                domCreation.addFilterDom(tags);
             }
             else {
                 alert('No items in History');
@@ -99,6 +107,13 @@ let tagClick = ()=>{
         $('#input-tag').val(tagName);
         networkCallForArticles(tagName);
     })
+}
+
+let createSearchHistoryContainer = ()=>{
+    $('#search-history-container').empty();
+    for(let i=0; i<currentData.length; i++){
+        domCreation.createHistoryitemDom(currentData[i], i);
+    }
 }
 
 let sortByDate = ()=>{
@@ -119,8 +134,22 @@ let sortByDate = ()=>{
     });
     isAscending = !isAscending;
     console.log(currentData);
-    $('#search-history-container').empty();
-    for(let i=0; i<currentData.length; i++){
-        domCreation.createHistoryitemDom(currentData[i], i);
+    createSearchHistoryContainer();
+}
+
+let filterFunction = ()=>{
+    console.log('change called')
+    let selectedTag = $('#filter-tags').find(":selected").text();
+    if(selectedTag=="No Filter")
+        currentData = allData;
+    else{
+        currentData = [];
+        for(let i=0; i<allData.length; i++){
+            let item = allData[i];
+            if(item['tag_history.tag_name']==selectedTag)
+                currentData.push(item);
+        }
     }
+    console.log(currentData);
+    createSearchHistoryContainer();
 }
