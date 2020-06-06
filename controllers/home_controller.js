@@ -53,20 +53,16 @@ module.exports.getSearchResults = async (req, res) => {
     }
 }
 
-let dbOperations = async (tag, tagLink)=>{
-    console.log('dbOperations called');
-    
+let dbOperations = async (tag, tagLink)=>{    
     let tagHistory = await TagHistory.findOne({where:{tag_name: tag}});
     if(tagHistory){
         console.log('found - updating time');
         await tagHistory.set('tag_name', tag+"y");
         tagHistory.save();
         await tagHistory.set('tag_name', tag);
-        console.log(tagHistory.dataValues);
     }
     else{
         console.log('Not found- creating new tag item');
         let newTagItem = await TagHistory.create({tag_name: tag, tag_link: tagLink});
-        console.log(newTagItem.dataValues);
     }
 }

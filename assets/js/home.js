@@ -21,7 +21,7 @@ let searchTags = () => {
                 createTagDom(tag);
             }
             addHeadingArticles();
-            scrappingTopArticlesLink(links);
+            scrappingTopArticlesLink(links, searchTag);
         }
     });
 }
@@ -82,7 +82,7 @@ let createArticleDetailsDom = (data, i) => {
     $(`#article-${i}`).append(str);
 }
 
-let scrappingTopArticlesLink = (links) => {
+let scrappingTopArticlesLink = (links, searchTag) => {
     for (let i = 0; i < links.length; i++) {
         createCrawlingPendingDom('pending', i);
     }
@@ -93,7 +93,7 @@ let scrappingTopArticlesLink = (links) => {
         $.ajax({
             type: "POST",
             url: `/article`,
-            data: { link: links[i] },
+            data: { link: links[i], tag: searchTag },
             success: function (response) {
                 console.log(response);
                 response.data.publishedTime = dateFormatFn(response.data.publishedTime);

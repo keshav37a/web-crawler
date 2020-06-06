@@ -2,9 +2,12 @@ const axios = require('axios');
 const cheerio = require('cheerio');
 const sequelize = require('../config/sequelize');
 const Author = sequelize.import('../models/Author');
+const Article = sequelize.import('../models/Article');
+const TagHistory = sequelize.import('../models/TagHistory');
 
 module.exports.home = async (req, res) => {
     let url = req.body.link;
+    let tagName = req.body.tag;
     
     let sTime = startTime();
 
@@ -13,17 +16,14 @@ module.exports.home = async (req, res) => {
 
     let articleTitle = {};
     let titleText = $("h1").first().text();
-    // console.log(`title: `, titleText);
+    
     articleTitle['name'] = titleText;
     articleTitle['link'] = url;
-
-    // let articleObj = $('article').html();
-    // console.log('article: ', articleObj);
 
     let articleAuthor = {};
     let authorUrl = $('meta[property="article:author"]').attr('content');
     let authorName = $('meta[name="author"]').attr('content');
-    // console.log(authorUrl);
+    
     articleAuthor['link'] = authorUrl;
     articleAuthor['name'] = authorName;
 
@@ -46,16 +46,7 @@ module.exports.home = async (req, res) => {
             responseLink = url
         }
     }
-    // console.log(responseLink);
-    //For responses for each article
     let responseHTML = await loadHtml(responseLink);
-    // $ = cheerio.load(responseHTML);
-    // let pTags = $('.streamItem.streamItem--postPreview.js-streamItem').each((index, element)=>{
-
-    // })
-    // console.log('pTags: ', pTags);
-    // console.log(`site-main: ${pTags}`);
-
     let timeDiff = endTime(sTime);
 
     let returnedData = {};
@@ -65,7 +56,7 @@ module.exports.home = async (req, res) => {
     returnedData['description'] = articleDescription;
     returnedData['timeElapsed'] = timeDiff;
 
-    dbOperations(returnedData);
+    dbOperations(returnedData, tagName);
 
     return res.status(200).json({
         data: returnedData,
@@ -83,8 +74,6 @@ let loadHtml = async (url) => {
     });
 
     let htmlResponse = response.data;
-    // console.log('-----------------------------------------------------------------------');
-    // console.log(`htmlResponse: ${htmlResponse}`);
     return htmlResponse;
 }
 
@@ -100,10 +89,16 @@ let endTime = (startTime)=> {
     return seconds;
 }
 
-let dbOperations = async (returnedData)=>{
-    console.log('dbOperations called');
+let dbOperations = async (returnedData, tagName)=>{
     let authorName = returnedData.author.name;
     let authorLink = returnedData.author.link;
+
+    let articleTitle = returnedData.title.name;
+    let articleLink = returnedData.title.link;
+    let articleDescription = returnedData.description;
+    let publishedTime = returnedData.publishedTime;
+    let authorId = "";
+    let tagId = "";
 
     let authorObject = await Author.findOne({where:{author_name: authorName}});
     if(authorObject){
@@ -112,6 +107,21 @@ let dbOperations = async (returnedData)=>{
     else{
         console.log('Not found- creating new tag item');
         let newAuthorObject = await Author.create({author_name: authorName, author_link: authorLink});
+        authorId = newAuthorObject.dataValues.id;
         console.log(newAuthorObject.dataValues);
+        console.log(typeof(authorId));
+    }
+
+    //get tagId by name
+    let tagObject = await TagHistory.findOne({where: {tag_name: tagName}});
+    tagId = tagObject.dataValues.id;
+    
+    let articleObject = await Article.findOne({where: {article_title: articleTitle}});
+    if(articleObject){
+        console.log('found - no need to create');
+    }
+    else{
+        console.log('Not found- creating new tag item');
+        let newArticleObject = await Article.create({article_title: articleTitle, article_link: articleLink, article_description: articleDescription, published_at: publishedTime, authorId: authorId, tagId: tagId});
     }
 }

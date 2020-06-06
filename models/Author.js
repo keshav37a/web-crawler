@@ -1,5 +1,5 @@
 module.exports = function (sequelize, DataTypes) {
-  const Author = sequelize.define("author", {
+  let Author = sequelize.define("author", {
     author_name: {
       type: DataTypes.STRING,
       allowNull: false
@@ -8,8 +8,8 @@ module.exports = function (sequelize, DataTypes) {
       type: DataTypes.STRING,
       allowNull: false
     },
-  }, {
-    freezeTableName: true, // Model tableName will be the same as the model name
-  });
+  },{
+    freezeTableName: true, 
+});
   return Author;
 };

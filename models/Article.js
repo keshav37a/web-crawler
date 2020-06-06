@@ -1,6 +1,12 @@
+let Author = require('./Author');
+
 module.exports = function (sequelize, DataTypes) {
   const Article = sequelize.define("article", {
     article_title: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    article_link: {
       type: DataTypes.STRING,
       allowNull: false
     },
@@ -12,8 +18,8 @@ module.exports = function (sequelize, DataTypes) {
       type: DataTypes.DATE,
       allowNull: false
     },
-  }, {
-    freezeTableName: true, // Model tableName will be the same as the model name
-  });
+  },{
+    freezeTableName: true, 
+});
   return Article;
 };
