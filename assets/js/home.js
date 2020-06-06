@@ -1,9 +1,20 @@
 console.log('Home script called');
+let currentData = [];
+let isAscending = true;
+let isSortPresent = false;
+
+let domCreation = new DomCreation();
 
 let searchTags = () => {
     let searchTag = $('#input-tag').val();
     console.log(searchTag);
     networkCallForArticles(searchTag);
+    $('#sortButton').remove();
+    $('#tag-link-container').remove();
+    $('#article-list-container').remove();
+    $('#search-history-container').hide();
+    $('#search-results-container').show();
+    isSortPresent = false;
 }
 
 let networkCallForArticles = (searchTag)=>{
@@ -15,81 +26,20 @@ let networkCallForArticles = (searchTag)=>{
             let links = response.data.links;
             let relatedTags = response.data.tags;
 
-            $('#tag-link-container').remove();
-            $('#article-list-container').remove();
-            $('#search-history-container').hide();
-            $('#search-results-container').show();
-
-            addHeadingTags();
+            domCreation.addHeadingTags();
             for (let tag of relatedTags) {
-                createTagDom(tag);
+                domCreation.createTagDom(tag);
             }
-            addHeadingArticles();
+            domCreation.addHeadingArticles();
             tagClick();
             scrappingTopArticlesLink(links, searchTag);
         }
     });
 }
 
-let addHeadingTags = () => {
-    let str = `
-    <div id="tag-link-container" class="flex-row-start">
-        <h3 class="heading">Related Tags</h3>
-    </div >`;
-    $('#search-results-container').append(str);
-}
-
-let addHeadingArticles = () => {
-    let str = `
-    <div id="article-list-container" class="flex-col-start">
-        <h3 class="heading">Articles</h3>
-    </div>`;
-    $('#search-results-container').append(str);
-}
-
-
-let createTagDom = (tag) => {
-    let str =
-        `<div class="tag-link-item">
-        <a class="tag-link-text tag-link-forward">${tag.name}</a>
-    </div>`;
-    $('#tag-link-container').append(str);
-};
-
-let createCrawlingPendingDom = (crawlingOrPending, i) => {
-    let str =
-        `<div class="single-article-container" id="article-${i}">
-        ${crawlingOrPending}
-    </div>`;
-    $('#article-list-container').append(str);
-}
-
-let createArticleDetailsDom = (data, i) => {
-    $(`#article-${i}`).text('');
-    let str =
-        `<div class="article-title-link">
-            <a class="tag-link-text" href="${data.title.link}">${data.title.name}</a>
-        </div>
-        <div class="article-author">
-            <a class="tag-link-text" href="${data.author.link}">${data.author.name}</a>
-        </div>
-        <div class="article-published-at">
-            <p>${data.publishedTime}</p>
-        </div>
-        <div class="article-description">
-            <p>${data.description}</p>
-        </div>
-        <div class="time-elapsed">
-            <p>Time Elapsed: ${data.timeElapsed} Seconds</p>
-        </div>`;
-
-
-    $(`#article-${i}`).append(str);
-}
-
 let scrappingTopArticlesLink = (links, searchTag) => {
     for (let i = 0; i < links.length; i++) {
-        createCrawlingPendingDom('pending', i);
+        domCreation.createCrawlingPendingDom('pending', i);
     }
     for (let i = 0; i < links.length; i++) {
         $(`#article-${i}`).text('crawling');
@@ -102,7 +52,7 @@ let scrappingTopArticlesLink = (links, searchTag) => {
             success: function (response) {
                 console.log(response);
                 response.data.publishedTime = dateFormatFn(response.data.publishedTime);
-                createArticleDetailsDom(response.data, i);
+                domCreation.createArticleDetailsDom(response.data, i);
             }
         });
     }
@@ -125,12 +75,14 @@ let showHistory = () => {
                 $('#search-history-container').empty();
                 $('#search-history-container').show();
                 $('#search-results-container').hide();
+                isSortPresent = domCreation.addSortDom(isSortPresent);
                 // createHistoryHeaderDom();
                 let historyArr = response.data;
+                currentData = response.data;
                 for (let i = 0; i < historyArr.length; i++) {
                     let historyItem = historyArr[i];
                     historyItem.updatedAt = dateFormatFn(historyItem.updatedAt);
-                    createHistoryitemDom(historyItem, i);
+                    domCreation.createHistoryitemDom(historyItem, i);
                 }
             }
             else {
@@ -140,21 +92,6 @@ let showHistory = () => {
     });
 }
 
-let createHistoryitemDom = (item, i) => {
-    console.log(item);
- let str =    
-    `<div id="history-item-${i+1}" class="single-article-container flex-row-start">
-    <div class="item">${i+1}</div>
-        <div class="item"><a class="tag-link-text" href="${item['tag_history.tag_link']}">${item['tag_history.tag_name']}<a/></div>
-        <div id="article-header-container" class="flex-col-start grow">
-            <div class="item "><a class="tag-link-text" href="${item['article_link']}">${item['article_title']}<a></div>
-            <div class="item"><a class="tag-link-text" href="${item['author.author_link']}">${item['author.author_name']}<a/></div>
-        </div
-        <div class="item">${item.updatedAt}</div>  
-    </div > `;
-    $('#search-history-container').append(str);
-}
-
 let tagClick = ()=>{
     $('.tag-link-forward').click((event)=>{
         console.log('clicked');
@@ -162,4 +99,28 @@ let tagClick = ()=>{
         $('#input-tag').val(tagName);
         networkCallForArticles(tagName);
     })
+}
+
+let sortByDate = ()=>{
+    console.log(currentData);
+    currentData.sort((a, b)=>{
+        if(isAscending){
+            if(a['createdAt']>b['createdAt'])
+                return 1;
+            else
+                return -1;
+        }
+        else{
+            if(a['createdAt']>b['createdAt'])
+                return -1;
+            else
+                return 1;
+        }
+    });
+    isAscending = !isAscending;
+    console.log(currentData);
+    $('#search-history-container').empty();
+    for(let i=0; i<currentData.length; i++){
+        domCreation.createHistoryitemDom(currentData[i], i);
+    }
 }

@@ -1,0 +1,80 @@
+class DomCreation{
+    
+    addSortDom = (isSortPresent)=>{
+        if(isSortPresent==false){
+            let str = '<button class="input-el btn" id="sortButton" onclick="sortByDate()">Sort</button>';
+            $('#input-container').append(str);
+            isSortPresent = true;
+            return isSortPresent;
+        }
+    }
+
+    addHeadingTags = () => {
+        let str = `
+        <div id="tag-link-container" class="flex-row-start">
+            <h3 class="heading">Related Tags</h3>
+        </div >`;
+        $('#search-results-container').append(str);
+    }
+
+    addHeadingArticles = () => {
+        let str = `
+        <div id="article-list-container" class="flex-col-start">
+            <h3 class="heading">Articles</h3>
+        </div>`;
+        $('#search-results-container').append(str);
+    }
+    
+    createTagDom = (tag) => {
+        let str =
+            `<div class="tag-link-item">
+            <a class="tag-link-text tag-link-forward">${tag.name}</a>
+        </div>`;
+        $('#tag-link-container').append(str);
+    };
+
+    createCrawlingPendingDom = (crawlingOrPending, i) => {
+        let str =
+            `<div class="single-article-container" id="article-${i}">
+            ${crawlingOrPending}
+        </div>`;
+        $('#article-list-container').append(str);
+    }
+    
+    createArticleDetailsDom = (data, i) => {
+        $(`#article-${i}`).text('');
+        let str =
+            `<div class="article-title-link">
+                <a class="tag-link-text" href="${data.title.link}">${data.title.name}</a>
+            </div>
+            <div class="article-author">
+                <a class="tag-link-text" href="${data.author.link}">${data.author.name}</a>
+            </div>
+            <div class="article-published-at">
+                <p>${data.publishedTime}</p>
+            </div>
+            <div class="article-description">
+                <p>${data.description}</p>
+            </div>
+            <div class="time-elapsed">
+                <p>Time Elapsed: ${data.timeElapsed} Seconds</p>
+            </div>`;
+    
+    
+        $(`#article-${i}`).append(str);
+    }
+
+    createHistoryitemDom = (item, i) => {
+     let str =    
+        `<div id="history-item-${i+1}" class="single-article-container flex-row-start">
+        <div class="item">${i+1}</div>
+            <div class="item"><a class="tag-link-text" href="${item['tag_history.tag_link']}">${item['tag_history.tag_name']}<a/></div>
+            <div id="article-header-container" class="flex-col-start grow">
+                <div class="item "><a class="tag-link-text" href="${item['article_link']}">${item['article_title']}<a></div>
+                <div class="item"><a class="tag-link-text" href="${item['author.author_link']}">${item['author.author_name']}<a/></div>
+            </div
+            <div class="item">${item.updatedAt}</div>  
+        </div > `;
+        $('#search-history-container').append(str);
+    }   
+}

@@ -36,11 +36,11 @@
     text-align: center;
     padding: 2rem 1rem 1rem 1rem;
     margin: 0; }
-  #home-container .input-container {
+  #home-container #input-container {
     display: flex;
     flex-direction: row;
     justify-content: center; }
-    #home-container .input-container #input-tag {
+    #home-container #input-container #input-tag {
       border-radius: 25px;
       border: none;
       outline: none;
