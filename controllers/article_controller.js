@@ -57,7 +57,7 @@ module.exports.home = async (req, res) => {
         returnedData['description'] = articleDescription;
         returnedData['timeElapsed'] = timeDiff;
     
-        dbOperations(returnedData, tagName);
+        await dbOperations(returnedData, tagName);
     
         return res.status(200).json({
             data: returnedData,

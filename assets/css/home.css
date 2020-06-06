@@ -2,6 +2,8 @@
   background-color: #8A7CAA;
   font-family: sans-serif;
   color: black; }
+  #home-container .single-article-container {
+    border-radius: 10px; }
   #home-container .input-el {
     margin: 1rem 3rem 1rem 3rem;
     padding: 0.25rem 0.5rem 0.25rem 0.5rem; }
@@ -9,6 +11,8 @@
     color: black;
     font-weight: 600;
     text-decoration: none; }
+  #home-container .tag-link-item {
+    cursor: pointer; }
   #home-container .item {
     text-decoration: none;
     margin-left: 3rem; }
@@ -30,7 +34,8 @@
     min-width: 95%; }
   #home-container .app-header {
     text-align: center;
-    margin: 0rem 1rem 1rem 1rem; }
+    padding: 2rem 1rem 1rem 1rem;
+    margin: 0; }
   #home-container .input-container {
     display: flex;
     flex-direction: row;
@@ -52,7 +57,7 @@
       background-color: #E9B5AC;
       border-radius: 10px;
       border: 1px solid black; }
-  #home-container #search-results-container #article-list-container .single-article-container {
+  #home-container #search-history-container .single-item-container {
     border-radius: 10px; }
 
 .flex-col-start {

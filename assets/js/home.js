@@ -1,9 +1,12 @@
 console.log('Home script called');
+
 let searchTags = () => {
     let searchTag = $('#input-tag').val();
     console.log(searchTag);
+    networkCallForArticles(searchTag);
+}
 
-    //For getting the list of search results and their links
+let networkCallForArticles = (searchTag)=>{
     $.ajax({
         type: "GET",
         url: `/list/${searchTag}`,
@@ -22,6 +25,7 @@ let searchTags = () => {
                 createTagDom(tag);
             }
             addHeadingArticles();
+            tagClick();
             scrappingTopArticlesLink(links, searchTag);
         }
     });
@@ -47,7 +51,7 @@ let addHeadingArticles = () => {
 let createTagDom = (tag) => {
     let str =
         `<div class="tag-link-item">
-        <a class="tag-link-text" href="${tag.value}">${tag.name}</a>
+        <a class="tag-link-text tag-link-forward">${tag.name}</a>
     </div>`;
     $('#tag-link-container').append(str);
 };
@@ -149,4 +153,13 @@ let createHistoryitemDom = (item, i) => {
         <div class="item">${item.updatedAt}</div>  
     </div > `;
     $('#search-history-container').append(str);
+}
+
+let tagClick = ()=>{
+    $('.tag-link-forward').click((event)=>{
+        console.log('clicked');
+        let tagName = event.target.text;
+        $('#input-tag').val(tagName);
+        networkCallForArticles(tagName);
+    })
 }

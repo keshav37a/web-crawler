@@ -3,6 +3,10 @@
     font-family: sans-serif;
     color: black;
 
+    .single-article-container{
+        border-radius: 10px;
+    }
+
     .input-el{
         margin: 1rem 3rem 1rem 3rem;
         padding: 0.25rem 0.5rem 0.25rem 0.5rem;
@@ -12,6 +16,10 @@
         color: black;
         font-weight: 600;
         text-decoration: none;
+    }
+
+    .tag-link-item{
+        cursor: pointer;
     }
 
     .item{
@@ -41,7 +49,8 @@
 
     .app-header{
         text-align: center;
-        margin: 0rem 1rem 1rem 1rem;
+        padding: 2rem 1rem 1rem 1rem;
+        margin: 0;
     }
 
     .input-container{
@@ -78,14 +87,12 @@
 
         }
         #article-list-container{
-            .single-article-container{
-                border-radius: 10px;
-            }
+            
         }
     }
     #search-history-container{
         .single-item-container{
-            
+            border-radius: 10px;
         }
     }
 }
