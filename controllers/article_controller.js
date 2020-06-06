@@ -1,5 +1,7 @@
 const axios = require('axios');
 const cheerio = require('cheerio');
+const sequelize = require('../config/sequelize');
+const Author = sequelize.import('../models/Author');
 
 module.exports.home = async (req, res) => {
     let url = req.body.link;
@@ -63,6 +65,8 @@ module.exports.home = async (req, res) => {
     returnedData['description'] = articleDescription;
     returnedData['timeElapsed'] = timeDiff;
 
+    dbOperations(returnedData);
+
     return res.status(200).json({
         data: returnedData,
         message: 'Home in Article Controller called'
@@ -90,13 +94,24 @@ let startTime = ()=> {
 
 let endTime = (startTime)=> {
     let newTime = new Date();
-    let timeDiff = newTime - startTime; //in ms
-    // strip the ms
+    let timeDiff = newTime - startTime;
     timeDiff /= 1000;
-
-    // get seconds 
     let seconds = Math.round(timeDiff);
-    console.log(seconds + " seconds");
     return seconds;
 }
 
+let dbOperations = async (returnedData)=>{
+    console.log('dbOperations called');
+    let authorName = returnedData.author.name;
+    let authorLink = returnedData.author.link;
+
+    let authorObject = await Author.findOne({where:{author_name: authorName}});
+    if(authorObject){
+        console.log('found - no need to create');
+    }
+    else{
+        console.log('Not found- creating new tag item');
+        let newAuthorObject = await Author.create({author_name: authorName, author_link: authorLink});
+        console.log(newAuthorObject.dataValues);
+    }
+}

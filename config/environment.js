@@ -1,7 +1,10 @@
 const development = {
     name: 'development',
+    dbHost: 'localhost',
     dbName: 'webcrawler_db',
-    dbPassword: ''
+    dbUser: `root`,
+    dbPassword: '',
+    dbDialect: 'mysql'
 };
 
 module.exports = development;

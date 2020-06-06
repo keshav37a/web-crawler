@@ -4,7 +4,9 @@ const expressLayouts = require('express-ejs-layouts');
 const app = express();
 const axios = require('axios');
 const cheerio = require('cheerio');
-const db = require('./config/mysql');
+// const db = require('./config/mysql');
+const db = require('./config/sequelize');
+const sequelize = require('./models/index');
 
 const sassMiddleware = require('node-sass-middleware');
 
