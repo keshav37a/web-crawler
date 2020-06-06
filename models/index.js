@@ -2,8 +2,6 @@ const Sequelize = require('sequelize');
 let sequelize = require('../config/sequelize');
 let db = {};
 
-sequelize.sync();
-
 let Article = sequelize.import('./Article');
 let Author = sequelize.import('./Author');
 let TagHistory = sequelize.import('./TagHistory');

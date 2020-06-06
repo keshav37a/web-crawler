@@ -1,4 +1,4 @@
-module.exports = function (sequelize, DataTypes) {
+module.exports = (sequelize, DataTypes)=> {
     let TagHistory = sequelize.define("tag_history", {
         tag_name: {
             type: DataTypes.STRING,

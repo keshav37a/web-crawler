@@ -1,4 +1,4 @@
-module.exports = function (sequelize, DataTypes) {
+module.exports = (sequelize, DataTypes)=> {
   let Author = sequelize.define("author", {
     author_name: {
       type: DataTypes.STRING,

@@ -1,6 +1,4 @@
-let Author = require('./Author');
-
-module.exports = function (sequelize, DataTypes) {
+module.exports = (sequelize, DataTypes)=> {
   const Article = sequelize.define("article", {
     article_title: {
       type: DataTypes.STRING,

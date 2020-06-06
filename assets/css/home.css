@@ -1,6 +1,14 @@
 #home-container {
   background-color: lightblue;
   font-family: sans-serif; }
+  #home-container .tag-link-text {
+    text-decoration: none; }
+  #home-container .single-article-container {
+    margin: 1rem;
+    border: 1px solid black;
+    padding: 1rem;
+    width: 95%;
+    min-width: 95%; }
   #home-container .app-header {
     text-align: center;
     margin: 0rem 1rem 1rem 1rem; }
@@ -13,25 +21,33 @@
       padding: 0.25rem 0.5rem 0.25rem 0.5rem; }
   #home-container #search-results-container .heading {
     margin: 1rem 1rem 1rem 1rem; }
-  #home-container #search-results-container .tag-link-text {
-    text-decoration: none; }
   #home-container #search-results-container #tag-link-container {
     margin: auto; }
     #home-container #search-results-container #tag-link-container .tag-link-item {
       padding: 0.5rem;
       margin: 1rem; }
-  #home-container #search-results-container #article-list-container .single-article-container {
-    margin: 1rem;
-    border: 1px solid black;
-    padding: 1rem;
-    width: 90%; }
+  #home-container #search-history-container .single-item-container .item {
+    text-decoration: none; }
 
 .flex-col-start {
   display: flex;
   flex-direction: column;
   align-items: flex-start; }
 
-.flex-row-start {
+.flex-row-center {
   display: flex;
   flex-direction: row;
   justify-content: center; }
+
+.flex-row-start {
+  display: flex;
+  flex-direction: row;
+  justify-content: start; }
+
+.flex-row-spc {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between; }
+
+.grow {
+  flex-grow: 1; }

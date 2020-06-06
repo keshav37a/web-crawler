@@ -1,7 +1,9 @@
 const Sequelize = require('sequelize');
 const environment = require('./environment');
 
-const sequelize = new Sequelize(environment.dbName, environment.dbUser, environment.dbPassword, {
+console.log('intialize sequelize called');
+
+let sequelize = new Sequelize(environment.dbName, environment.dbUser, environment.dbPassword, {
     host: environment.dbHost,
     dialect: environment.dbDialect,
     pool: {

@@ -34,7 +34,7 @@ let addHeadingTags = () => {
     $('#search-results-container').append(str);
 }
 
-let addHeadingArticles = ()=>{
+let addHeadingArticles = () => {
     let str = `
     <div id="article-list-container" class="flex-col-start">
         <h3 class="heading">Articles</h3>
@@ -107,4 +107,55 @@ let dateFormatFn = function (dateString) {
     console.log('DateFormat fn called');
     let formattedDate = moment(dateString).format('MMMM DD, hh:mm A');
     return formattedDate;
+}
+
+let showHistory = () => {
+    console.log('showHistory called');
+    $.ajax({
+        type: "GET",
+        url: `/article/history`,
+        success: function (response) {
+            console.log(response);
+            if (response.data.length > 0) {
+                $('#search-results-container').toggle();
+                // createHistoryHeaderDom();
+                let historyArr = response.data;
+                for (let i = 0; i < historyArr.length; i++) {
+                    let historyItem = historyArr[i];
+                    historyItem.updatedAt = dateFormatFn(historyItem.updatedAt);
+                    createHistoryitemDom(historyItem, i);
+                }
+            }
+            else {
+                alert('No items in History');
+            }
+        }
+    });
+}
+
+// let createHistoryHeaderDom = ()=>{
+//     let str = `
+//     <div id="history-item-header" class="flex-row-spc">
+//         <div class="header grow">Tag Name</div>
+//         <div id="article-header-container" class="flex-col-start grow">
+//             <div class="header">Article</div>
+//             <div class="header">Author</div>
+//         </div
+//         <div class="header grow">Searched On</div>  
+//     </div>`;
+//     $('#search-history-container').append(str);
+// }
+
+let createHistoryitemDom = (item, i) => {
+    console.log(item);
+ let str =    
+    `<div id="history-item-${i}" class="single-article-container flex-row-start">
+        <div class="item grow"><a class="tag-link-text" href="${item['tag_history.tag_link']}">${item['tag_history.tag_name']}<a/></div>
+        <div id="article-header-container" class="flex-col-start grow">
+            <div class="item "><a class="tag-link-text" href="${item['article_link']}">${item['article_title']}<a></div>
+            <div class="item"><a class="tag-link-text" href="${item['author.author_link']}">${item['author.author_name']}<a/></div>
+        </div
+        <div class="item grow">${item.updatedAt}</div>  
+    </div > `;
+    $('#search-history-container').append(str);
 }

@@ -2,6 +2,18 @@
     background-color: lightblue;
     font-family: sans-serif;
 
+    .tag-link-text{
+        text-decoration: none;
+    }
+
+    .single-article-container{
+        margin: 1rem;
+        border: 1px solid black;
+        padding: 1rem;
+        width: 95%;
+        min-width: 95%;
+    }
+
     .app-header{
         text-align: center;
         margin: 0rem 1rem 1rem 1rem;
@@ -23,10 +35,6 @@
             margin: 1rem 1rem 1rem 1rem;
         }
 
-        .tag-link-text{
-            text-decoration: none;
-        }
-
         #tag-link-container{
             margin: auto;
 
@@ -38,11 +46,13 @@
 
         }
         #article-list-container{
-            .single-article-container{
-                margin: 1rem;
-                border: 1px solid black;
-                padding: 1rem;
-                width: 90%;
+            
+        }
+    }
+    #search-history-container{
+        .single-item-container{
+            .item{
+                text-decoration: none;
             }
         }
     }
@@ -55,8 +65,25 @@
     align-items: flex-start;
 }
 
-.flex-row-start{
+.flex-row-center{
     display: flex;
     flex-direction: row;
     justify-content: center;
 }
+
+.flex-row-start{
+    display: flex;
+    flex-direction: row;
+    justify-content: start;
+}
+
+.flex-row-spc{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.grow{
+    flex-grow: 1;
+}
+
