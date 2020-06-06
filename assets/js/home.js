@@ -1,6 +1,7 @@
 console.log('Home script called');
 let currentData = [];
-let allData = [];
+let allHistoryData = [];
+let tags = [];
 let isAscending = true;
 let isSortPresent = false;
 
@@ -8,15 +9,41 @@ let domCreation = new DomCreation();
 
 let searchTags = () => {
     let searchTag = $('#input-tag').val();
-    console.log(searchTag);
     networkCallForArticles(searchTag);
-    $('#sortButton').remove();
-    $('#tag-link-container').remove();
-    $('#article-list-container').remove();
-    $('#search-history-container').hide();
-    $('#search-results-container').show();
+    showFirstPage();
     isSortPresent = false;
 }
+
+let showHistory = () => {
+    console.log('showHistory called');
+    $.ajax({
+        type: "GET",
+        url: `/article/history`,
+        success: function (response) {
+            if (response.data.length > 0) {
+                currentData = response.data;
+                allHistoryData = response.data;
+                tags = [];
+                console.log('allData: ', currentData);
+                showSecondPage();
+                for (let i = 0; i < currentData.length; i++) {
+                    let historyItem = currentData[i];
+                    let singleTag = historyItem['tag_history.tag_name'];
+                    historyItem.updatedAt = dateFormatFn(historyItem.updatedAt);
+                    domCreation.createHistoryitemDom(historyItem, i);
+                    if($.inArray( singleTag, tags)==-1)
+                        tags.push(singleTag);
+                }
+                console.log(tags);
+                isSortPresent =domCreation.addFilterAndSortDom(isSortPresent, tags);
+            }
+            else {
+                alert('No items in History');
+            }
+        }
+    });
+}
+
 
 let networkCallForArticles = (searchTag)=>{
     $.ajax({
@@ -44,8 +71,6 @@ let scrappingTopArticlesLink = (links, searchTag) => {
     }
     for (let i = 0; i < links.length; i++) {
         $(`#article-${i}`).text('crawling');
-
-        //For getting the article details
         $.ajax({
             type: "POST",
             url: `/article`,
@@ -65,51 +90,19 @@ let dateFormatFn = function (dateString) {
     return formattedDate;
 }
 
-let showHistory = () => {
-    console.log('showHistory called');
-    $.ajax({
-        type: "GET",
-        url: `/article/history`,
-        success: function (response) {
-            console.log(response);
-            if (response.data.length > 0) {
-                $('#search-history-container').empty();
-                $('#search-history-container').show();
-                $('#search-results-container').hide();
-                isSortPresent = domCreation.addSortDom(isSortPresent);
-                // createHistoryHeaderDom();
-                let historyArr = response.data;
-                currentData = response.data;
-                allData = response.data;
-                let tags = [];
-                for (let i = 0; i < historyArr.length; i++) {
-                    let historyItem = historyArr[i];
-                    let singleTag = historyItem['tag_history.tag_name'].toLowerCase();
-                    historyItem.updatedAt = dateFormatFn(historyItem.updatedAt);
-                    domCreation.createHistoryitemDom(historyItem, i);
-                    if($.inArray( singleTag, tags)==-1)
-                        tags.push(singleTag);
-                }
-                console.log(tags);
-                domCreation.addFilterDom(tags);
-            }
-            else {
-                alert('No items in History');
-            }
-        }
-    });
-}
-
 let tagClick = ()=>{
     $('.tag-link-forward').click((event)=>{
         console.log('clicked');
         let tagName = event.target.text;
         $('#input-tag').val(tagName);
+        showFirstPage();
         networkCallForArticles(tagName);
     })
 }
 
 let createSearchHistoryContainer = ()=>{
+    console.log('createSearchHistoryContainer called');
+    console.log(currentData);
     $('#search-history-container').empty();
     for(let i=0; i<currentData.length; i++){
         domCreation.createHistoryitemDom(currentData[i], i);
@@ -141,15 +134,52 @@ let filterFunction = ()=>{
     console.log('change called')
     let selectedTag = $('#filter-tags').find(":selected").text();
     if(selectedTag=="No Filter")
-        currentData = allData;
+        currentData = allHistoryData;
     else{
         currentData = [];
-        for(let i=0; i<allData.length; i++){
-            let item = allData[i];
+        for(let i=0; i<allHistoryData.length; i++){
+            let item = allHistoryData[i];
             if(item['tag_history.tag_name']==selectedTag)
                 currentData.push(item);
         }
     }
     console.log(currentData);
+    createSearchHistoryContainer();
+}
+
+let goBackToSearch =()=>{
+    showFirstPage();
+    isSortPresent = false;
+}
+
+let showFirstPage = ()=>{
+    $('#input-container').empty();
+    $('#search-history-container').hide();
+    $('#search-results-container').show();
+    domCreation.createInputContainerDom();
+    console.log(isSortPresent);
+}
+
+let showSecondPage = ()=>{
+    $('#search-history-container').empty();
+    $('#search-history-container').show();
+    $('#search-results-container').hide();
+}
+
+let searchItemsInHistory = ()=>{
+    let text = $('#searchHistoryInput').val().toLowerCase();;
+    currentData = [];
+    allHistoryData.forEach((object)=>{
+        let isContains = false;
+        Object.entries(object).forEach(([key, value])=>{
+            console.log(value);
+            if(value.toString().includes(text)){
+                isContains = true;
+            }
+        })
+        if(isContains){
+            currentData.push(object);
+        }
+    });
     createSearchHistoryContainer();
 }

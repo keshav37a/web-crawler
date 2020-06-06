@@ -1,15 +1,34 @@
-class DomCreation{
-    
-    addSortDom = (isSortPresent)=>{
-        if(isSortPresent==false){
+class DomCreation {
+
+    addFilterAndSortDom = (isSortPresent, tags) => {
+        if (isSortPresent == false) {
+            $('#input-container').empty();
             let str = '<button class="input-el btn" id="sortButton" onclick="sortByDate()">Sort</button>';
             $('#input-container').append(str);
+            isSortPresent = true;
+
+            let strBeg = `<select class="input-el btn" id="filter-tags" onchange=filterFunction()>`;
+            let none = '<option selected value="none">No Filter</option>';
+            for (let i = 0; i < tags.length; i++) {
+                let option = `<option value="${tags[i]}">${tags[i]}</option>`;
+                strBeg += option;
+            }
+            let strEnd = `</select>`;
+            $('#input-container').append(strBeg + none + strEnd);
+
+            str = '<input class="input-el btn" placeholder="Search ...." id="searchHistoryInput" oninput="searchItemsInHistory()"></input>'
+            $('#input-container').append(str);
+
+            str = '<button class="input-el btn" id="backButton" onclick="goBackToSearch()">Back</button>';
+            $('#input-container').append(str);
+
             isSortPresent = true;
             return isSortPresent;
         }
     }
 
     addHeadingTags = () => {
+        $('#tag-link-container').remove();
         let str = `
         <div id="tag-link-container" class="flex-row-start">
             <h3 class="heading">Related Tags</h3>
@@ -18,13 +37,14 @@ class DomCreation{
     }
 
     addHeadingArticles = () => {
+        $('#article-list-container').remove();
         let str = `
         <div id="article-list-container" class="flex-col-start">
             <h3 class="heading">Articles</h3>
         </div>`;
         $('#search-results-container').append(str);
     }
-    
+
     createTagDom = (tag) => {
         let str =
             `<div class="tag-link-item">
@@ -40,7 +60,7 @@ class DomCreation{
         </div>`;
         $('#article-list-container').append(str);
     }
-    
+
     createArticleDetailsDom = (data, i) => {
         $(`#article-${i}`).text('');
         let str =
@@ -59,15 +79,15 @@ class DomCreation{
             <div class="time-elapsed">
                 <p>Time Elapsed: ${data.timeElapsed} Seconds</p>
             </div>`;
-    
-    
+
+
         $(`#article-${i}`).append(str);
     }
 
     createHistoryitemDom = (item, i) => {
-     let str =    
-        `<div id="history-item-${i+1}" class="single-article-container flex-row-start">
-        <div class="item">${i+1}</div>
+        let str =
+            `<div id="history-item-${i + 1}" class="single-article-container flex-row-start">
+        <div class="item">${i + 1}</div>
             <div class="item"><a class="tag-link-text" href="${item['tag_history.tag_link']}">${item['tag_history.tag_name']}<a/></div>
             <div id="article-header-container" class="flex-col-start grow">
                 <div class="item "><a class="tag-link-text" href="${item['article_link']}">${item['article_title']}<a></div>
@@ -76,16 +96,13 @@ class DomCreation{
             <div class="item">${item.updatedAt}</div>  
         </div > `;
         $('#search-history-container').append(str);
-    }   
+    }
 
-    addFilterDom = (tags)=>{
-        let strBeg = `<select class="input-el btn" id="filter-tags" onchange=filterFunction()>`;
-        let none = '<option value="none">No Filter</option>';
-        for(let i=0; i<tags.length; i++){
-            let option = `<option value="${tags[i]}">${tags[i]}</option>`;
-            strBeg+=option;
-        }
-        let strEnd = `</select>`;
-        $('#input-container').append(strBeg+none+strEnd);
+    createInputContainerDom = () => {
+        let str = `
+        <input id="input-tag" class="input-el" type="text" placeholder="Enter the tag...">
+        <button class="input-el btn" onclick="searchTags()">SEARCH</button>
+        <button class="input-el btn" onclick="showHistory()">HISTORY</button>`;
+        $('#input-container').prepend(str);
     }
 }
