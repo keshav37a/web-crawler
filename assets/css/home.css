@@ -1,11 +1,30 @@
 #home-container {
-  background-color: lightblue;
-  font-family: sans-serif; }
+  background-color: #8A7CAA;
+  font-family: sans-serif;
+  color: black; }
+  #home-container .input-el {
+    margin: 1rem 3rem 1rem 3rem;
+    padding: 0.25rem 0.5rem 0.25rem 0.5rem; }
   #home-container .tag-link-text {
+    color: black;
+    font-weight: 600;
     text-decoration: none; }
+  #home-container .item {
+    text-decoration: none;
+    margin-left: 3rem; }
+  #home-container .btn {
+    background-color: #E9B5AC;
+    color: black;
+    border: none;
+    padding: 0.25rem 2rem 0.25rem 2rem;
+    font-weight: 600;
+    border-radius: 12px;
+    outline: none; }
   #home-container .single-article-container {
     margin: 1rem;
     border: 1px solid black;
+    background-color: #E9B5AC;
+    color: black;
     padding: 1rem;
     width: 95%;
     min-width: 95%; }
@@ -16,18 +35,25 @@
     display: flex;
     flex-direction: row;
     justify-content: center; }
-    #home-container .input-container .input-el {
-      margin: 1rem;
-      padding: 0.25rem 0.5rem 0.25rem 0.5rem; }
+    #home-container .input-container #input-tag {
+      border-radius: 25px;
+      border: none;
+      outline: none;
+      padding: 0.5rem 0.75rem 0.5rem 0.75rem;
+      background-color: #E9B5AC;
+      color: black; }
   #home-container #search-results-container .heading {
     margin: 1rem 1rem 1rem 1rem; }
   #home-container #search-results-container #tag-link-container {
     margin: auto; }
     #home-container #search-results-container #tag-link-container .tag-link-item {
       padding: 0.5rem;
-      margin: 1rem; }
-  #home-container #search-history-container .single-item-container .item {
-    text-decoration: none; }
+      margin: 1rem;
+      background-color: #E9B5AC;
+      border-radius: 10px;
+      border: 1px solid black; }
+  #home-container #search-results-container #article-list-container .single-article-container {
+    border-radius: 10px; }
 
 .flex-col-start {
   display: flex;

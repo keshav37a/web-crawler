@@ -9,12 +9,13 @@ let searchTags = () => {
         url: `/list/${searchTag}`,
         success: function (response) {
             console.log(response);
-
             let links = response.data.links;
             let relatedTags = response.data.tags;
 
             $('#tag-link-container').remove();
             $('#article-list-container').remove();
+            $('#search-history-container').hide();
+            $('#search-results-container').show();
 
             addHeadingTags();
             for (let tag of relatedTags) {
@@ -117,7 +118,9 @@ let showHistory = () => {
         success: function (response) {
             console.log(response);
             if (response.data.length > 0) {
-                $('#search-results-container').toggle();
+                $('#search-history-container').empty();
+                $('#search-history-container').show();
+                $('#search-results-container').hide();
                 // createHistoryHeaderDom();
                 let historyArr = response.data;
                 for (let i = 0; i < historyArr.length; i++) {
@@ -133,29 +136,17 @@ let showHistory = () => {
     });
 }
 
-// let createHistoryHeaderDom = ()=>{
-//     let str = `
-//     <div id="history-item-header" class="flex-row-spc">
-//         <div class="header grow">Tag Name</div>
-//         <div id="article-header-container" class="flex-col-start grow">
-//             <div class="header">Article</div>
-//             <div class="header">Author</div>
-//         </div
-//         <div class="header grow">Searched On</div>  
-//     </div>`;
-//     $('#search-history-container').append(str);
-// }
-
 let createHistoryitemDom = (item, i) => {
     console.log(item);
  let str =    
-    `<div id="history-item-${i}" class="single-article-container flex-row-start">
-        <div class="item grow"><a class="tag-link-text" href="${item['tag_history.tag_link']}">${item['tag_history.tag_name']}<a/></div>
+    `<div id="history-item-${i+1}" class="single-article-container flex-row-start">
+    <div class="item">${i+1}</div>
+        <div class="item"><a class="tag-link-text" href="${item['tag_history.tag_link']}">${item['tag_history.tag_name']}<a/></div>
         <div id="article-header-container" class="flex-col-start grow">
             <div class="item "><a class="tag-link-text" href="${item['article_link']}">${item['article_title']}<a></div>
             <div class="item"><a class="tag-link-text" href="${item['author.author_link']}">${item['author.author_name']}<a/></div>
         </div
-        <div class="item grow">${item.updatedAt}</div>  
+        <div class="item">${item.updatedAt}</div>  
     </div > `;
     $('#search-history-container').append(str);
 }
