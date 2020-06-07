@@ -6,6 +6,8 @@ let Article = sequelize.import('./Article');
 let Author = sequelize.import('./Author');
 let TagHistory = sequelize.import('./TagHistory');
 
+//Setting up foreign keys to our models
+
 TagHistory.hasMany(Article, {
   onDelete: "CASCADE",
   foreignKey: {name:'tagId', allowNull: false}

@@ -1,12 +1,12 @@
-console.log('Home script called');
-let currentData = [];
-let allHistoryData = [];
-let tags = [];
-let isAscending = true;
-let isSortPresent = false;
+let currentData = [];   //Changes for each search, sort, filter
+let allHistoryData = [];    //Stays the same throughout
+let tags = [];  
+let isAscending = true; //For toggling increasing, decreasing sort
+let isSortPresent = false;  //For prevention of duplicate dom items being created
 
 let domCreation = new DomCreation();
 
+//Search the tag value from the input
 let searchTags = () => {
     let searchTag = $('#input-tag').val();
     networkCallForArticles(searchTag);
@@ -14,8 +14,8 @@ let searchTags = () => {
     isSortPresent = false;
 }
 
+//Network Call for article history stored in the db
 let showHistory = () => {
-    console.log('showHistory called');
     $.ajax({
         type: "GET",
         url: `/article/history`,
@@ -24,12 +24,12 @@ let showHistory = () => {
                 currentData = response.data;
                 allHistoryData = response.data;
                 tags = [];
-                showSecondPage();
+                showSecondPage();   //Removes visibility of search-container and empty the history-container
                 for (let i = 0; i < currentData.length; i++) {
                     let historyItem = currentData[i];
                     let singleTag = historyItem['tag_history.tag_name'];
                     historyItem.updatedAt = dateFormatFn(historyItem.updatedAt);
-                    domCreation.createHistoryitemDom(historyItem, i);
+                    domCreation.createHistoryitemDom(historyItem, i);   //Add single history item to the DOM
                     if($.inArray( singleTag, tags)==-1)
                         tags.push(singleTag);
                 }
@@ -42,7 +42,7 @@ let showHistory = () => {
     });
 }
 
-
+//Make network call for retrieving articles
 let networkCallForArticles = (searchTag)=>{
     $.ajax({
         type: "GET",
@@ -56,7 +56,7 @@ let networkCallForArticles = (searchTag)=>{
                 domCreation.createTagDom(tag);
             }
             domCreation.addHeadingArticles();
-            tagClick();
+            tagClick(); //Clcik on the related tag simulates the search for that tag and retrieves its articles
             scrappingTopArticlesLink(links, searchTag);
         }
     });
@@ -94,6 +94,7 @@ let tagClick = ()=>{
     })
 }
 
+//This is called after each search, filter, sort action to uodate the DOM based on the currentData
 let createSearchHistoryContainer = ()=>{
     console.log('createSearchHistoryContainer called');
     $('#search-history-container').empty();
@@ -102,6 +103,7 @@ let createSearchHistoryContainer = ()=>{
     }
 }
 
+//Sort the arry by date in both ascending and descending order
 let sortByDate = ()=>{
     console.log(currentData);
     currentData.sort((a, b)=>{
@@ -123,6 +125,7 @@ let sortByDate = ()=>{
     createSearchHistoryContainer();
 }
 
+//Filter function that gets executed when delete button is pressed to get the list of all checked items to be deleted from the history
 let filterFunction = ()=>{
     let selectedTag = $('#filter-tags').find(":selected").text();
     if(selectedTag=="No Filter")
@@ -135,9 +138,10 @@ let filterFunction = ()=>{
                 currentData.push(item);
         }
     }
-    createSearchHistoryContainer();
+    createSearchHistoryContainer(); //After deletion recreate the history page
 }
 
+//Back button to go from history to search
 let goBackToSearch =()=>{
     showFirstPage();
     isSortPresent = false;
@@ -156,6 +160,7 @@ let showSecondPage = ()=>{
     $('#search-results-container').hide();
 }
 
+//Searches item in the array by all fields. Updates dom on each change in the input
 let searchItemsInHistory = ()=>{
     let text = $('#searchHistoryInput').val().toLowerCase();;
     currentData = [];
@@ -173,6 +178,7 @@ let searchItemsInHistory = ()=>{
     createSearchHistoryContainer();
 }
 
+//Network call to delete items. Frontend an backend calls
 let deleteHistoryItems = ()=>{
     let selected = [];
     $(':checked').each(function() {

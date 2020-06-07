@@ -4,7 +4,8 @@ const development = {
     dbName: 'webcrawler_db',
     dbUser: `root`,
     dbPassword: '',
-    dbDialect: 'mysql'
+    dbDialect: 'mysql',
+    port: 8000
 };
 
 module.exports = development;

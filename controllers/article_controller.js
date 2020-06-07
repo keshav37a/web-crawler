@@ -5,6 +5,7 @@ const Author = sequelize.import('../models/Author');
 const Article = sequelize.import('../models/Article');
 const TagHistory = sequelize.import('../models/TagHistory');
 
+//Passing the url of the searched article to load its content
 module.exports.home = async (req, res) => {
     try{
         let url = req.body.link;
@@ -57,6 +58,7 @@ module.exports.home = async (req, res) => {
         returnedData['description'] = articleDescription;
         returnedData['timeElapsed'] = timeDiff;
     
+        //Adding extracted data to the database
         await dbOperations(returnedData, tagName);
     
         return res.status(200).json({
@@ -72,6 +74,7 @@ module.exports.home = async (req, res) => {
     }
 }
 
+//Loading response data by the urls extracted
 let loadHtml = async (url) => {
     try{
         let response = await axios.get(url, {
@@ -90,6 +93,7 @@ let loadHtml = async (url) => {
     }
 }
 
+//For calculating time elapsed in crawling through each article
 let startTime = ()=> {
     return new Date();
 };
@@ -104,9 +108,11 @@ let endTime = (startTime)=> {
 
 let dbOperations = async (returnedData, tagName)=>{
     try{
+        //Author
         let authorName = returnedData.author.name;
         let authorLink = returnedData.author.link;
     
+        //Article
         let articleTitle = returnedData.title.name;
         let articleLink = returnedData.title.link;
         let articleDescription = returnedData.description;
@@ -144,9 +150,9 @@ let dbOperations = async (returnedData, tagName)=>{
             message: 'Internal Server Error'
         });
     }
-    
 }
 
+//Getting the historical data from the database for each tag
 module.exports.history = async (req, res)=>{
     try{
         let articles = await Article.findAll({raw: true, include: [Author, TagHistory]});
@@ -163,6 +169,7 @@ module.exports.history = async (req, res)=>{
     }
 }
 
+//Delete articles based on the titleName
 module.exports.deleteArticles = async (req, res)=>{
     try{
         let titlesObjArr = req.body.titles;

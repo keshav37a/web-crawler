@@ -1,5 +1,6 @@
 class DomCreation {
 
+    //Add filter dropdown, sort, delete and back buttons in the history page
     addFilterAndSortDom = (isSortPresent, tags) => {
         if (isSortPresent == false) {
             $('#input-container').empty();
@@ -30,6 +31,7 @@ class DomCreation {
         }
     }
 
+    //Add headings - (Related Tags, Articles) in the home page
     addHeadingTags = () => {
         $('#tag-link-container').remove();
         let str = `
@@ -48,6 +50,7 @@ class DomCreation {
         $('#search-results-container').append(str);
     }
 
+    //Add tag links in the home page
     createTagDom = (tag) => {
         let str =
             `<div class="tag-link-item">
@@ -56,6 +59,7 @@ class DomCreation {
         $('#tag-link-container').append(str);
     };
 
+    //Show article crawling or pending status
     createCrawlingPendingDom = (crawlingOrPending, i) => {
         let str =
             `<div class="single-article-container" id="article-${i}">
@@ -64,6 +68,7 @@ class DomCreation {
         $('#article-list-container').append(str);
     }
 
+    //Show article details after crawling has finished
     createArticleDetailsDom = (data, i) => {
         $(`#article-${i}`).text('');
         let str =
@@ -83,10 +88,10 @@ class DomCreation {
                 <p>Time Elapsed: ${data.timeElapsed} Seconds</p>
             </div>`;
 
-
         $(`#article-${i}`).append(str);
     }
 
+    //Create history item for the database for the values retireved from the database
     createHistoryitemDom = (item, i) => {
         let str =
         `<div id="history-item-${i + 1}" class="single-article-container flex-row-start">
@@ -103,6 +108,7 @@ class DomCreation {
         $('#search-history-container').append(str);
     }
 
+    //Create input content
     createInputContainerDom = () => {
         let str = `
         <input id="input-tag" class="input-el" type="text" placeholder="Enter the tag...">
