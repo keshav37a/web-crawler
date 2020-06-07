@@ -19,6 +19,9 @@ class DomCreation {
             str = '<input class="input-el btn" placeholder="Search ...." id="searchHistoryInput" oninput="searchItemsInHistory()"></input>'
             $('#input-container').append(str);
 
+            str = '<button class="input-el btn" id="deleteButton" onclick="deleteHistoryItems()">Delete</button>';
+            $('#input-container').append(str);
+
             str = '<button class="input-el btn" id="backButton" onclick="goBackToSearch()">Back</button>';
             $('#input-container').append(str);
 
@@ -86,8 +89,9 @@ class DomCreation {
 
     createHistoryitemDom = (item, i) => {
         let str =
-            `<div id="history-item-${i + 1}" class="single-article-container flex-row-start">
-        <div class="item">${i + 1}</div>
+        `<div id="history-item-${i + 1}" class="single-article-container flex-row-start">
+            <div><input class="check-item" id="check-item-${i + 1}" type="checkbox"></input></div>
+            <div class="item">${i + 1}</div>
             <div class="item"><a class="tag-link-text" href="${item['tag_history.tag_link']}">${item['tag_history.tag_name']}<a/></div>
             <div id="article-header-container" class="flex-col-start grow">
                 <div class="item "><a class="tag-link-text" href="${item['article_link']}">${item['article_title']}<a></div>
@@ -95,6 +99,7 @@ class DomCreation {
             </div
             <div class="item">${item.updatedAt}</div>  
         </div > `;
+
         $('#search-history-container').append(str);
     }
 

@@ -117,13 +117,12 @@ let dbOperations = async (returnedData, tagName)=>{
         let authorObject = await Author.findOne({where:{author_name: authorName}});
         if(authorObject){
             console.log('found - no need to create');
+            authorId = authorObject.dataValues.id;
         }
         else{
             console.log('Not found- creating new tag item');
             let newAuthorObject = await Author.create({author_name: authorName, author_link: authorLink});
             authorId = newAuthorObject.dataValues.id;
-            console.log(newAuthorObject.dataValues);
-            console.log(typeof(authorId));
         }
     
         //get tagId by name
@@ -160,6 +159,35 @@ module.exports.history = async (req, res)=>{
         console.log(`err->article_controller.history(): ${err}`);
         return res.status(500).json({
             message: 'Internal Server Error'
+        });
+    }
+}
+
+module.exports.deleteArticles = async (req, res)=>{
+    try{
+        let titlesObjArr = req.body.titles;
+        let titlesArr = [];
+        for(let i=0; i<titlesObjArr.length; i++){
+            titlesArr.push(titlesObjArr[i].title);
+        }
+        let deleted = await Article.destroy({ where: { article_title: titlesArr }});
+        if(deleted==titlesArr.length){
+            return res.status(200).json({
+                message: 'Items Successfully Deleted',
+                data: deleted
+            });
+        }
+        else{
+            return res.status(500).json({
+                message: 'Internal Server Error',
+                data: deleted
+            });
+        }
+    }
+    catch(err){
+        return res.status(500).json({
+            message: 'Internal Server Error',
+            data: deleted
         });
     }
 }

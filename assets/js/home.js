@@ -24,7 +24,6 @@ let showHistory = () => {
                 currentData = response.data;
                 allHistoryData = response.data;
                 tags = [];
-                console.log('allData: ', currentData);
                 showSecondPage();
                 for (let i = 0; i < currentData.length; i++) {
                     let historyItem = currentData[i];
@@ -34,7 +33,6 @@ let showHistory = () => {
                     if($.inArray( singleTag, tags)==-1)
                         tags.push(singleTag);
                 }
-                console.log(tags);
                 isSortPresent =domCreation.addFilterAndSortDom(isSortPresent, tags);
             }
             else {
@@ -50,7 +48,6 @@ let networkCallForArticles = (searchTag)=>{
         type: "GET",
         url: `/list/${searchTag}`,
         success: function (response) {
-            console.log(response);
             let links = response.data.links;
             let relatedTags = response.data.tags;
 
@@ -76,7 +73,6 @@ let scrappingTopArticlesLink = (links, searchTag) => {
             url: `/article`,
             data: { link: links[i], tag: searchTag },
             success: function (response) {
-                console.log(response);
                 response.data.publishedTime = dateFormatFn(response.data.publishedTime);
                 domCreation.createArticleDetailsDom(response.data, i);
             }
@@ -85,14 +81,12 @@ let scrappingTopArticlesLink = (links, searchTag) => {
 }
 
 let dateFormatFn = function (dateString) {
-    console.log('DateFormat fn called');
     let formattedDate = moment(dateString).format('MMMM DD, hh:mm A');
     return formattedDate;
 }
 
 let tagClick = ()=>{
     $('.tag-link-forward').click((event)=>{
-        console.log('clicked');
         let tagName = event.target.text;
         $('#input-tag').val(tagName);
         showFirstPage();
@@ -102,7 +96,6 @@ let tagClick = ()=>{
 
 let createSearchHistoryContainer = ()=>{
     console.log('createSearchHistoryContainer called');
-    console.log(currentData);
     $('#search-history-container').empty();
     for(let i=0; i<currentData.length; i++){
         domCreation.createHistoryitemDom(currentData[i], i);
@@ -131,7 +124,6 @@ let sortByDate = ()=>{
 }
 
 let filterFunction = ()=>{
-    console.log('change called')
     let selectedTag = $('#filter-tags').find(":selected").text();
     if(selectedTag=="No Filter")
         currentData = allHistoryData;
@@ -143,7 +135,6 @@ let filterFunction = ()=>{
                 currentData.push(item);
         }
     }
-    console.log(currentData);
     createSearchHistoryContainer();
 }
 
@@ -157,7 +148,6 @@ let showFirstPage = ()=>{
     $('#search-history-container').hide();
     $('#search-results-container').show();
     domCreation.createInputContainerDom();
-    console.log(isSortPresent);
 }
 
 let showSecondPage = ()=>{
@@ -172,7 +162,6 @@ let searchItemsInHistory = ()=>{
     allHistoryData.forEach((object)=>{
         let isContains = false;
         Object.entries(object).forEach(([key, value])=>{
-            console.log(value);
             if(value.toString().includes(text)){
                 isContains = true;
             }
@@ -182,4 +171,45 @@ let searchItemsInHistory = ()=>{
         }
     });
     createSearchHistoryContainer();
+}
+
+let deleteHistoryItems = ()=>{
+    let selected = [];
+    $(':checked').each(function() {
+        let idStr = $(this).attr('id');
+        if(idStr!==undefined){
+            let id = idStr.substring(11);
+            console.log(id);
+            let obj = {};
+            obj['id'] = id-1;
+            obj['title'] = allHistoryData[id-1]['article_title'];
+            selected.push(obj);
+        }
+    });
+    $.ajax({
+        type: "delete",
+        url: `/article/delete`,
+        data: { titles: selected},
+        success: function (response) {
+            console.log(response);
+            if(response.data==selected.length){
+                for(let i=0; i<selected.length; i++){
+                    let obj = selected[i];
+                    console.log(obj);
+                    for(let i=0; i<allHistoryData.length; i++){
+                        let item = allHistoryData[i];
+                        if(item['article_title']==obj.title){
+                            allHistoryData.splice(i, 1);
+
+                        }
+                        if(i<currentData.length && currentData[i]['article_title']==obj.title){
+                            currentData.splice(i, 1);
+                        }
+                    }
+                    createSearchHistoryContainer();
+                }
+                currentData = allHistoryData;
+            }
+        }
+    });
 }
