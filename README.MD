@@ -39,3 +39,7 @@ This project has the following features-
 * A history page that shows the history of all the tags searched
 * Search, sort, filter the history data
 * Delete the history data
+
+## Project Demo
+
+`https://drive.google.com/file/d/1qBaDLfF_8h3qhbpTcVJcNFteJY7YkEkj/view?usp=sharing`
